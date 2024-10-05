@@ -1,21 +1,19 @@
 #!/usr/bin/python3
-""" Function that compress a folder """
+"""Fabric script which generates a tgz archive"""
+
 from datetime import datetime
 from fabric.api import local
-import os
+from os.path import isdir
 
 
 def do_pack():
-    """The function that compress a folder before sending"""
+    """TGZ"""
     try:
-        if not os.path.exists("versions"):
-            local('mkdir versions')
-        t = datetime.now()
-        f = "%Y%m%d%H%M%S"
-        archive_path = 'versions/web_static_{}.tgz'.format(t.strftime(f))
-        local('tar -cvzf {} web_static'.format(archive_path))
-        return archive_path
-    except Exception as e:
-        print("An error occurred:", e)
+        date = datetime.now().strftime("%Y%m%d%H%M%S")
+        if isdir("versions") is False:
+            local("mkdir versions")
+        file_name = "versions/web_static_{}.tgz".format(date)
+        local("tar -cvzf {} web_static".format(file_name))
+        return file_name
+    except:
         return None
-    
